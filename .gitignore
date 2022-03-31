@@ -429,8 +429,5 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-# Ignore execution environments
-execution_env/
-
-# Ignore log environments
-logs/
+# Ignore the config file for security
+config.ini

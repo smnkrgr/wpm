@@ -2,6 +2,8 @@ from src.Event import Event
 import requests
 import os
 import sys
+import json
+import typing
 
 
 class Helper():
@@ -23,29 +25,80 @@ class Helper():
         print("")
 
     @staticmethod
-    def request_token(email, password) -> str:
+    def authorize_identity(email, password) -> typing.Tuple[str, str]:
+        Event("Authorizing account: " + email)
         headers = {
-            'User-Agent': 'Mozilla/5.0 (X11; Linux xidentitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyB5m_AnO575kvWriahcF1SFIWp8Fj3gQno',
-            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0',
+            'User-Agent': 'Klappradtour des Kreises',
             'Accept': '*/*',
             'Accept-Language': 'en-US,en;q=0.5',
             'x-client-version': 'Firefox/JsCore/9.6.0/FirebaseCore-web',
             'Origin': 'https://monkeytype.com',
             'Connection': 'keep-alive',
             'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'no-cors',
+            'Sec-Fetch-Mode': 'cors',
             'Sec-Fetch-Site': 'cross-site',
-            'Pragma': 'no-cache',
-            'Cache-Control': 'no-cache',
+        }
+        params = {
+            'key': 'AIzaSyB5m_AnO575kvWriahcF1SFIWp8Fj3gQno',
         }
         json_data = {
             'returnSecureToken': True,
             'email': email,
             'password': password,
         }
+        url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword'
+        try:
+            response = requests.post(url, headers=headers, params=params, json=json_data)
+            json_response = json.loads(response.text)
+            name, token = json_response['displayName'], json_response['idToken']
+            Event("Account authorized!", is_success=True)
+            Event("Display name: " + name, level=1)
+            Event("Token retrieved!", level=1)
+            return name, token
+        except Exception as e:
+            message = "Authorization failed: " + str(e)
+            Event(message, is_error=True, exit=True)
 
-        response = requests.post('https://api.monkeytype.com/results', headers=headers, json=json_data)
-        return response.text
+    @staticmethod
+    def get_typing_data(token) -> dict:
+        Event("Requesting typing data...")
+        headers = {
+            'User-Agent': 'Klappradtour des Kreises',
+            'Accept': 'application/json',
+            'Accept-Language': 'en-US,en;q=0.5',
+            'Authorization': "Bearer " + token,
+            'Origin': 'https://monkeytype.com',
+            'Connection': 'keep-alive',
+            'Referer': 'https://monkeytype.com/',
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'same-site',
+        }
+        try:
+            url = 'https://api.monkeytype.com/results'
+            response = requests.get(url, headers=headers)
+            json_response = json.loads(response.text)
+            typing_data = json_response['data']
+            Event("Typing data retrieved!", is_success=True)
+            Event(str(len(typing_data)) + " typing tests retrieved!", level=1)
+            return json_response
+        except Exception as e:
+            message = "Requesting typing data failed: " + str(e)
+            Event(message, is_error=True, exit=True)
+
+
+    @staticmethod
+    def request_token_curl(email, password) -> str:
+        # Read curl request from file
+        with open('src/token_request', 'r') as f:
+            curl = f.read().rstrip()
+        # Replace mail and pw placeholder
+        curl = curl.replace("$email", email)
+        curl = curl.replace("$password", password)
+        print(curl)
+        # Execute curl request
+        os.system(curl)
+
 
 
 # Print header upon import

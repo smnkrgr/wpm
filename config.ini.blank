@@ -1,3 +1,7 @@
 [main]
 email=mail@mail.de
 password=password
+
+[telegram]
+token=12341234
+chat_id=123412341234

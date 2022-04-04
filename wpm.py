@@ -1,6 +1,7 @@
 from src.Helper import Helper
 from src.Event import Event
 from src.Identity import Identity
+from src.TelegramBot import TelegramBot
 from backports import configparser
 
 
@@ -23,6 +24,18 @@ if __name__=='__main__':
         email=email,
         password=password
     )
+    new_pbs = identity.get_new_pbs()
+    Event("Checking for new PBs...")
+    if new_pbs != {}:
+        Event("There are "+str(len(new_pbs))+" new PBs.")
+    else:
+        Event("No new PBs. Exiting..")
+        exit(0)
 
-    # Print the new pbs
-    print(identity.get_new_pbs())
+
+    # Create the telegram bot and send new pbs
+    token = config.get("telegram", "token")
+    chat_id = config.get("telegram", "chat_id")
+    bot = TelegramBot(token=token, chat_id=chat_id)
+    for pb in new_pbs:
+        bot.format_and_send_new_pb(new_pbs[pb], "ass")

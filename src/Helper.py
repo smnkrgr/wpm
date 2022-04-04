@@ -107,19 +107,6 @@ class Helper():
             Event(message, is_error=True, exit=True)
         return dictionary
 
-    @staticmethod
-    def request_token_curl(email, password) -> str:
-        # Read curl request from file
-        with open('src/token_request', 'r') as f:
-            curl = f.read().rstrip()
-        # Replace mail and pw placeholder
-        curl = curl.replace("$email", email)
-        curl = curl.replace("$password", password)
-        print(curl)
-        # Execute curl request
-        os.system(curl)
-
-
 
 # Print header upon import
 Helper.print_header()

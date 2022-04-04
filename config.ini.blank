@@ -1,6 +1,13 @@
 [main]
-email=mail@mail.de
-password=password
+emails=
+        mail@mail.de
+        asdf@asdf.de
+passwords=
+        password
+        password123
+rl_names=
+        Mehlboi
+        KlappradtourDesKreises
 
 [telegram]
 token=12341234

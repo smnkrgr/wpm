@@ -5,9 +5,10 @@ import os
 
 class Identity():
 
-    def __init__(self, email, password) -> None:
+    def __init__(self, email, password, rl_name) -> None:
         # Retrieve display name and token
         self.email = email
+        self.rl_name = rl_name
         self.name, self.token = Helper.authorize_identity(
             email=self.email,
             password=password
@@ -28,6 +29,9 @@ class Identity():
 
     def get_new_pbs(self) -> dict:
         return self.new_pbs
+    
+    def get_rl_name(self) -> str:
+        return self.rl_name
 
     def extract_pbs(self) -> dict:
         pbs = {}

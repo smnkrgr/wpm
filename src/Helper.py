@@ -97,6 +97,10 @@ class Helper():
             Event(message, is_error=True, exit=True)
 
     @staticmethod
+    def parse_conf_list(value) -> list:
+        return list(filter(None, (x.strip() for x in value.splitlines())))
+
+    @staticmethod
     def load_dict(path) -> dict:
         dictionary = {}
         try:

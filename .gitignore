@@ -431,3 +431,6 @@ cython_debug/
 
 # Ignore the config file for security
 config.ini
+
+# Ignore the pbs folder
+pbs/

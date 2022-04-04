@@ -4,6 +4,7 @@ import os
 import sys
 import json
 import typing
+import pickle
 
 
 class Helper():
@@ -81,11 +82,30 @@ class Helper():
             typing_data = json_response['data']
             Event("Typing data retrieved!", is_success=True)
             Event(str(len(typing_data)) + " typing tests retrieved!", level=1)
-            return json_response
+            return typing_data
         except Exception as e:
             message = "Requesting typing data failed: " + str(e)
             Event(message, is_error=True, exit=True)
 
+    @staticmethod
+    def save_dict(path, dictionary) -> None:
+        try:
+            with open(path, "wb") as fp:
+                pickle.dump(dictionary, fp)
+        except Exception as e:
+            message = "Saving the dictionary failed: " + str(e)
+            Event(message, is_error=True, exit=True)
+
+    @staticmethod
+    def load_dict(path) -> dict:
+        dictionary = {}
+        try:
+            with open(path, "rb") as fp:
+                dictionary = pickle.load(fp)
+        except Exception as e:
+            message = "Saving the dictionary failed: " + str(e)
+            Event(message, is_error=True, exit=True)
+        return dictionary
 
     @staticmethod
     def request_token_curl(email, password) -> str:

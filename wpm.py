@@ -23,3 +23,6 @@ if __name__=='__main__':
         email=email,
         password=password
     )
+
+    # Print the new pbs
+    print(identity.get_new_pbs())

@@ -32,8 +32,8 @@ class TelegramBot():
         lang = "English" if not 'language' in pb else str(pb['language']).capitalize()
         consist = "" if not 'consistency' in pb else str(pb['consistency'])
         # Construct the message
-        message = "Holy shit " + name + "!\n"
-        message += "New PB for mode: "+mode+" ("+lang+", "+mode2+"s)\n"
+        message = name + "  ԅ(☉Д☉)╮\n"
+        message += "New PB for mode: "+mode+" ("+lang+", "+mode2+"s, "+diff+")\n"
         message += "WPM: "+wpm+" (Accuracy: "+acc+"%, Consistency: "+consist+"%)"
         return message
 

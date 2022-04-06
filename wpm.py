@@ -29,6 +29,10 @@ if __name__=='__main__':
             rl_name=rl_names[i]
         ))
 
+    # Create the telegram bot and send new pbs
+    token = config.get("telegram", "token")
+    chat_id = config.get("telegram", "chat_id")
+    bot = TelegramBot(token=token, chat_id=chat_id)
     Event("Checking for new PBs...")
     for identity in identities:
         new_pbs = identity.get_new_pbs()
@@ -36,11 +40,6 @@ if __name__=='__main__':
             Event("There are "+str(len(new_pbs))+" new PBs.")
         else:
             Event("No new PBs.")
-            break
 
-        # Create the telegram bot and send new pbs
-        token = config.get("telegram", "token")
-        chat_id = config.get("telegram", "chat_id")
-        bot = TelegramBot(token=token, chat_id=chat_id)
         for pb in new_pbs:
             bot.format_and_send_new_pb(new_pbs[pb], identity.get_rl_name())

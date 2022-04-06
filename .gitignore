@@ -433,4 +433,4 @@ cython_debug/
 config.ini
 
 # Ignore the pbs folder
-pbs/
+pbs/*
